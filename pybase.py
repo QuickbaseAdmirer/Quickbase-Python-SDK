@@ -31,7 +31,7 @@ class QBConn:
 		params['ticket'] = self.ticket
 		params['apptoken'] = self.token
 		params['realmhost'] = self.realm
-		urlparams = urllib.parse.urlencode(params)								#urllib.urlencode(params)
+		urlparams = urllib.parse.urlencode(params)		#urllib.urlencode(params)
 		resp = urllib.request.FancyURLopener().open(url+"?"+urlparams).read()	#urllib.FancyURLopener().open(url+"?"+urlparams).read()
 		if re.match('^\<\?xml version=',resp.decode("utf-8")) == None:
 			print("No useful data received")
@@ -59,7 +59,14 @@ class QBConn:
 				if key in fields:
 					params["_fid_"+fields[key]] = value
 		params = dict(params,**options)
-		print(params)
+		return self.request(params,tableID)
+
+	def deleteRecord(self,tableID,rid):
+		params = {'act':'API_DeleteRecord','rid':rid}
+		return self.request(params,tableID)
+
+	def purgeRecords(self,tableID,query):
+		params = {'act':'API_PurgeRecords','query':query}
 		return self.request(params,tableID)
 
 	def getFields(self,tableID):
@@ -161,5 +168,22 @@ class QBConn:
 					return
 
 			return self.query(tid,query)
+
+		elif tokens[0] == "DELETE":
+			tid = self.tables[tokens[2]]
+			tfields = self.getFields(tid)
+			where = 3
+			querystr = ""
+			for i in range(where+1,len(tokens)):
+				if (i-where+1)%2 == 0:
+					filt = tokens[i].split("`")
+					querystr += "{'"+tfields[filt[0]]+"'."+filt[1]+".'"+filt[2]+"'}"
+				elif tokens[i] == "AND" or tokens[i] == "OR":
+					querystr += tokens[i]
+				else:
+					break
+			return self.purgeRecords(tid,querystr)
+
+
 
 
