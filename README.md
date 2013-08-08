@@ -52,7 +52,7 @@ query(tableID,query):
 sql(querystr):
 	Performs a query() after translating a simple SQL-style string to QuickBase's query format
 	
-	Example: qb.sql("SELECT * FROM users WHERE name\`EX\`John\_Doe OR role\`EX\`fakeperson") #The \_ represents a space. This is a very basic function that doesn't use state machines. Note: field and table names will not have spaces
-	Example: qb.sql("SELECT firstname|lastname FROM users WHERE paid\`EX\`true ORDER BY lastname ASC LIMIT 100")
-	Example: qb.sql("DELETE FROM assets WHERE value\`BF\`0")
+	Example: qb.sql("SELECT * FROM users WHERE name`EX`John\_Doe OR role`EX`fakeperson") #The \_ represents a space. This is a very basic function that doesn't use state machines. Note: field and table names will not have spaces
+	Example: qb.sql("SELECT firstname|lastname FROM users WHERE paid`EX`true ORDER BY lastname ASC LIMIT 100")
+	Example: qb.sql("DELETE FROM assets WHERE value`BF`0")
 	Please contribute any improvents you make on this function back to this repo. It would make life so much easier for all QuickBase+Python users :)
