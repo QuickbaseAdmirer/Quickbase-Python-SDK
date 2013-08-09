@@ -8,7 +8,7 @@ QBConn variables:
 	error: the numerical error code returned by an API call. 0 is no error, negative values are internal to this library
 	tables: a dictionary containing tablename:tableID pairs
 	
-QBConn(QB_URL,QB_APPID[,QB_TOKEN, QB_REALM]):
+[constructor] QBConn(QB_URL,QB_APPID[,QB_TOKEN, QB_REALM]):
 
 	Makes a connection to the QuickBase specified by QB_URL and QB_APPID. Uses QB_TOKEN and QB_REALM if specified.
 	Note: QB_URL should have a trailing slash. ex. "https://intuitcorp.quickbase.com/db/";
