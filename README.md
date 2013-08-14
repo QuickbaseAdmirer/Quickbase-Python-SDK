@@ -17,9 +17,21 @@ authenticate(username,password):
 
 	Authenticates username and password with QuickBase and stores the returned ticket. The tables variable is populated on success
 	
+sql(querystr):
+	Performs a query() after translating a simple SQL-style string to QuickBase's query format
+	
+	Example: qb.sql("SELECT * FROM users WHERE name`EX`John\_Doe OR role`EX`fakeperson") #The \_ represents a space. This is a very basic function that doesn't use state machines. Note: field and table names will not have spaces
+	Example: qb.sql("SELECT firstname|lastname FROM users WHERE paid`EX`true ORDER BY lastname ASC LIMIT 100")
+	Example: qb.sql("DELETE FROM assets WHERE value`BF`0")
+	Please contribute any improvents you make on this function back to this repo. It would make life so much easier for all QuickBase+Python users :)
+	
 request(params,url_ext):
 
 	Takes a dict of param:value pairs, adds ticket, token, and realm (if specified) and makes an API call to the base URL+url_extension
+	
+getFields(tableID):
+
+	Returns a dict containing the fields of a table as fieldname:fieldID pairs
 	
 addRecord(tableID,data):
 
@@ -37,10 +49,6 @@ purgeRecords(tableID,query):
 
 	Deletes records from tableID that match the QuickBase-style query
 	
-getFields(tableID):
-
-	Returns a dict containing the fields of a table as fieldname:fieldID pairs
-	
 _getTables():
 
 	Returns a dict containing a QuickBase app's tables as tablename:tableID pairs. This is run automatically after a successful authenticate call
@@ -48,11 +56,3 @@ _getTables():
 query(tableID,query):
 
 	Returns a list of dicts containing fieldname:value pairs that represent rows returned by the query. record ID will always be specified by the "rid" key
-
-sql(querystr):
-	Performs a query() after translating a simple SQL-style string to QuickBase's query format
-	
-	Example: qb.sql("SELECT * FROM users WHERE name`EX`John\_Doe OR role`EX`fakeperson") #The \_ represents a space. This is a very basic function that doesn't use state machines. Note: field and table names will not have spaces
-	Example: qb.sql("SELECT firstname|lastname FROM users WHERE paid`EX`true ORDER BY lastname ASC LIMIT 100")
-	Example: qb.sql("DELETE FROM assets WHERE value`BF`0")
-	Please contribute any improvents you make on this function back to this repo. It would make life so much easier for all QuickBase+Python users :)
