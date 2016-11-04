@@ -7,16 +7,24 @@ import re
 import string
 
 class QBConn:
-	def __init__(self,url,appid,token=None,realm=""):
+	def __init__(self,url,appid,token=None, user_token=None,realm=""):
+		
 		self.url = url
 		self.token = token
+		self.user_token = user_token
 		self.appid = appid
 		self.ticket = None
 		self.realm = realm	#This allows one QuickBase realm to proxy for another
 		self.error = 0		#Set after every API call. A non-zero value indicates an error. A negative value indicates an error with this library
 		self.tables = {}
 
-	def authenticate(self,username,password):
+	def authenticate(self,username=None,password=None):
+		
+		if self.user_token:
+			self.tables = self._getTables()
+			return
+		
+		
 		params = {'act':'API_Authenticate','username':username,'password':password}
 		resp = self.request(params,'main')
 		if self.error != 0:
@@ -30,7 +38,13 @@ class QBConn:
 	def request(self,params,url_ext):
 		url = self.url
 		url += url_ext
-		params['ticket'] = self.ticket
+		
+		if self.user_token:
+			params['usertoken'] = self.user_token
+		else:
+			params['ticket'] = self.ticket
+			
+		
 		params['apptoken'] = self.token
 		params['realmhost'] = self.realm
 		#urlparams = urllib.parse.urlencode(params) #Use this line for Python > 3
